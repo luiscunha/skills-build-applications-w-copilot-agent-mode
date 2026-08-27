@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 
 import { getApiBaseUrl, normalizePayload } from '../utils/api'
 
+const usersEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`
+  : `${getApiBaseUrl()}/api/users/`
+
 export default function Users() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -12,7 +16,7 @@ export default function Users() {
 
     async function loadUsers() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/users/`, {
+        const response = await fetch(usersEndpoint, {
           signal: controller.signal,
         })
 

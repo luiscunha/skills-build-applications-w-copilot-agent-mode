@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 
 import { getApiBaseUrl, normalizePayload } from '../utils/api'
 
+const teamsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams/`
+  : `${getApiBaseUrl()}/api/teams/`
+
 export default function Teams() {
   const [teams, setTeams] = useState([])
   const [loading, setLoading] = useState(true)
@@ -12,7 +16,7 @@ export default function Teams() {
 
     async function loadTeams() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/teams/`, {
+        const response = await fetch(teamsEndpoint, {
           signal: controller.signal,
         })
 

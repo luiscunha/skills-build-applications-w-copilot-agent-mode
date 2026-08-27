@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 
 import { getApiBaseUrl, normalizePayload } from '../utils/api'
 
+const leaderboardEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  : `${getApiBaseUrl()}/api/leaderboard/`
+
 export default function Leaderboard() {
   const [leaders, setLeaders] = useState([])
   const [loading, setLoading] = useState(true)
@@ -12,7 +16,7 @@ export default function Leaderboard() {
 
     async function loadLeaderboard() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/leaderboard/`, {
+        const response = await fetch(leaderboardEndpoint, {
           signal: controller.signal,
         })
 

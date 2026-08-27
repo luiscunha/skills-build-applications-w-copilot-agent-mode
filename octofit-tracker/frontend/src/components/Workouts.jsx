@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 
 import { getApiBaseUrl, normalizePayload } from '../utils/api'
 
+const workoutsEndpoint = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts/`
+  : `${getApiBaseUrl()}/api/workouts/`
+
 export default function Workouts() {
   const [workouts, setWorkouts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -12,7 +16,7 @@ export default function Workouts() {
 
     async function loadWorkouts() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/workouts/`, {
+        const response = await fetch(workoutsEndpoint, {
           signal: controller.signal,
         })
 
