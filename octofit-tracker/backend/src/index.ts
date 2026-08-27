@@ -16,6 +16,34 @@ const baseUrl = codespaceName
 export function createApp(): Express {
   const app = express()
 
+  app.use((request, response, next) => {
+    const origin = request.headers.origin
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+      'http://localhost:4173',
+      'http://127.0.0.1:4173',
+    ]
+
+    const isCodespaceOrigin = typeof origin === 'string' && /https?:\/\/.*\.app\.github\.dev/.test(origin)
+    const isAllowedOrigin = typeof origin === 'string' && (allowedOrigins.includes(origin) || isCodespaceOrigin)
+
+    if (isAllowedOrigin) {
+      response.setHeader('Access-Control-Allow-Origin', origin)
+    }
+
+    response.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.setHeader('Access-Control-Allow-Credentials', 'true')
+
+    if (request.method === 'OPTIONS') {
+      response.sendStatus(204)
+      return
+    }
+
+    next()
+  })
+
   app.use(express.json())
 
   app.get('/api/health', (_request, response) => {
